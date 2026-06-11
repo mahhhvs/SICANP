@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2d7a4f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BioCongresso" />
+  <meta name="description" content="App oficial do Congresso de Biologia 2026" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Congresso de Biologia 2026</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep:  #0a1a0f;
+      --green-mid:   #1a3a24;
+      --green-main:  #2d7a4f;
+      --green-light: #4caf78;
+      --green-pale:  #a8e6c1;
+      --gold:        #c8a84b;
+      --cream:       #f0ede6;
+      --white:       #ffffff;
+      --text-dim:    #8aab97;
+      --radius:      14px;
+      --safe-top:    env(safe-area-inset-top, 0px);
+      --safe-bot:    env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--green-deep);
+      color: var(--cream);
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    /* ── APP SHELL ─────────────────────────────── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    /* ── INSTALL BANNER ────────────────────────── */
+    #install-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: #1a1200;
+      padding: 10px 16px;
+      padding-top: calc(10px + var(--safe-top));
+      font-size: 13px;
+      font-weight: 500;
+    }
+    #install-banner.visible { display: flex; }
+    #install-banner button {
+      margin-left: auto;
+      background: #1a1200;
+      color: var(--gold);
+      border: none;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #install-banner .close-banner {
+      background: transparent;
+      color: #1a1200;
+      padding: 4px 6px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* ── HEADER ────────────────────────────────── */
+    header {
+      padding: 14px 20px 12px;
+      padding-top: calc(14px + var(--safe-top));
+      background: var(--green-deep);
+      border-bottom: 1px solid rgba(45,122,79,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--green-main);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      line-height: 1.1;
+      color: var(--cream);
+      letter-spacing: 0.01em;
+    }
+    .logo-text span {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .header-date {
+      text-align: right;
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .header-date strong {
+      color: var(--green-pale);
+      font-weight: 600;
+      display: block;
+    }
+
+    /* ── CONTENT SCROLL AREA ───────────────────── */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    /* ── SCREENS ───────────────────────────────── */
+    .screen { display: none; padding: 0 0 20px; }
+    .screen.active { display: block; }
+
+    /* ── HOME ──────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, var(--green-mid) 0%, var(--green-deep) 100%);
+      padding: 24px 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(45,122,79,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green-pale);
+      margin-bottom: 6px;
+    }
+    .hero h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .hero h2 em {
+      font-style: italic;
+      color: var(--green-pale);
+    }
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+    .hero-badges {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(45,122,79,0.25);
+      border: 1px solid rgba(45,122,79,0.4);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--green-pale);
+      font-weight: 500;
+    }
+
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 18px 20px 8px;
+      font-weight: 600;
+    }
+
+    /* ── COUNTDOWN ─────────────────────────────── */
+    .countdown-bar {
+      display: flex; gap: 8px;
+      padding: 4px 20px 0;
+    }
+    .countdown-item {
+      flex: 1;
+      background: var(--green-mid);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: var(--radius);
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .countdown-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--green-light);
+      line-height: 1;
+      display: block;
+    }
+    .countdown-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ── CARDS ─────────────────────────────────── */
+    .cards-row {
+      display: flex; gap: 10px;
+      padding: 4px 20px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cards-row::-webkit-scrollbar { display: none; }
+    .card-quick {
+      flex-shrink: 0;
+      width: 130px;
+      background: var(--green-mid);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      cursor: pointer;
+      transition: border-color .2s, transform .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card-quick:active { transform: scale(0.97); }
+    .card-quick:hover { border-color: var(--green-light); }
+    .card-icon { font-size: 22px; margin-bottom: 8px; }
+    .card-title { font-size: 12px; font-weight: 600; color: var(--cream); }
+    .card-sub   { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+    /* ── FEATURED TALK ─────────────────────────── */
+    .featured-talk {
+      margin: 4px 20px 0;
+      background: linear-gradient(135deg, rgba(45,122,79,0.18) 0%, rgba(26,58,36,0.5) 100%);
+      border: 1px solid rgba(45,122,79,0.4);
+      border-left: 3px solid var(--green-light);
+      border-radius: var(--radius);
+      padding: 14px 14px;
+    }
+    .ft-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--green-pale);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .ft-title { font-size: 14px; font-weight: 600; color: var(--cream); margin-bottom: 4px; line-height: 1.3; }
+    .ft-speaker { font-size: 12px; color: var(--text-dim); }
+    .ft-time { margin-top: 10px; display: flex; align-items: center; gap: 6px; }
+    .ft-time span { font-size: 11px; color: var(--green-pale); font-weight: 500; }
+
+    /* ── PROGRAMAÇÃO ───────────────────────────── */
+    .prog-day-tabs {
+      display: flex; gap: 6px;
+      padding: 4px 20px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .prog-day-tabs::-webkit-scrollbar { display: none; }
+    .day-tab {
+      flex-shrink: 0;
+      background: transparent;
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .day-tab.active {
+      background: var(--green-main);
+      border-color: var(--green-main);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .schedule-list { padding: 12px 20px 0; }
+    .schedule-item {
+      display: flex; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(45,122,79,0.12);
+    }
+    .schedule-item:last-child { border-bottom: none; }
+    .schedule-time {
+      flex-shrink: 0;
+      width: 44px;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding-top: 2px;
+      line-height: 1.3;
+    }
+    .schedule-content { flex: 1; }
+    .schedule-name { font-size: 13px; font-weight: 600; color: var(--cream); margin-bottom: 2px; }
+    .schedule-speaker { font-size: 11px; color: var(--text-dim); }
+    .schedule-room {
+      display: inline-block;
+      margin-top: 5px;
+      background: rgba(45,122,79,0.2);
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--green-pale);
+    }
+    .schedule-tag {
+      display: inline-block;
+      margin-top: 5px;
+      margin-left: 4px;
+      background: rgba(200,168,75,0.15);
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--gold);
+    }
+
+    /* ── PALESTRANTES ──────────────────────────── */
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 4px 20px 0;
+    }
+    .speaker-card {
+      background: var(--green-mid);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .speaker-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--green-main);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 10px;
+      border: 2px solid rgba(76,175,120,0.4);
+    }
+    .speaker-name { font-size: 12px; font-weight: 600; color: var(--cream); }
+    .speaker-inst { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+    .speaker-topic { font-size: 10px; color: var(--green-pale); margin-top: 6px; line-height: 1.3; }
+
+    /* ── MAPA ──────────────────────────────────── */
+    .map-card {
+      margin: 4px 20px 0;
+      background: var(--green-mid);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .map-visual {
+      height: 140px;
+      background: linear-gradient(135deg, #0f2d1a 0%, #1a3a24 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,122,79,0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,122,79,0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .map-pin {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .map-pin-dot {
+      width: 20px; height: 20px;
+      background: var(--green-light);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: 0 0 0 4px rgba(76,175,120,0.3);
+    }
+    .map-pin-label {
+      background: rgba(10,26,15,0.85);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      color: var(--green-pale);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .map-info {
+      padding: 12px 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .map-address { font-size: 12px; color: var(--cream); font-weight: 500; }
+    .map-city { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+    .map-btn {
+      background: var(--green-main);
+      border: none; border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 11px; font-weight: 600;
+      color: var(--white);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .rooms-list { padding: 8px 20px 0; }
+    .room-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(45,122,79,0.12);
+    }
+    .room-icon {
+      width: 36px; height: 36px;
+      background: rgba(45,122,79,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .room-name { font-size: 13px; font-weight: 600; color: var(--cream); }
+    .room-cap  { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+
+    /* ── INFORMAÇÕES ───────────────────────────── */
+    .info-section { padding: 4px 20px 0; }
+    .info-card {
+      background: var(--green-mid);
+      border: 1px solid rgba(45,122,79,0.3);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .info-card-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--cream);
+      margin-bottom: 8px;
+    }
+    .info-card p { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+    .info-card a { color: var(--green-pale); text-decoration: none; }
+    .info-list { list-style: none; }
+    .info-list li {
+      font-size: 12px; color: var(--text-dim);
+      padding: 4px 0;
+      display: flex; align-items: flex-start; gap: 6px;
+    }
+    .info-list li::before { content: '→'; color: var(--green-light); flex-shrink: 0; margin-top: 1px; }
+
+    /* ── BOTTOM NAV ────────────────────────────── */
+    nav {
+      display: flex;
+      background: var(--green-deep);
+      border-top: 1px solid rgba(45,122,79,0.25);
+      padding-bottom: var(--safe-bot);
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 10px 4px 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .15s;
+    }
+    .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-btn .nav-label {
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      margin-top: 3px;
+      font-weight: 500;
+      color: var(--text-dim);
+      font-family: inherit;
+    }
+    .nav-btn.active .nav-label { color: var(--green-light); }
+    .nav-btn.active .nav-icon { filter: none; }
+
+    /* ── INSTALL MODAL ─────────────────────────── */
+    #install-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7);
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 0 var(--safe-bot);
+    }
+    #install-modal.open { display: flex; }
+    .modal-sheet {
+      background: var(--green-mid);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 20px 28px;
+      width: 100%;
+      max-width: 430px;
+      border-top: 1px solid rgba(45,122,79,0.4);
+    }
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: rgba(45,122,79,0.4);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+    .modal-sheet h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px; color: var(--white);
+      margin-bottom: 6px;
+    }
+    .modal-sheet p { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; }
+    .install-steps { list-style: none; margin-bottom: 20px; }
+    .install-steps li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 6px 0;
+      font-size: 12px; color: var(--cream);
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      background: var(--green-main);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: white;
+    }
+    .modal-btns { display: flex; gap: 10px; }
+    .btn-primary {
+      flex: 1; background: var(--green-main);
+      border: none; border-radius: var(--radius);
+      padding: 13px;
+      font-size: 14px; font-weight: 600; color: white;
+      cursor: pointer; font-family: inherit;
+    }
+    .btn-secondary {
+      flex: 0;
+      background: transparent;
+      border: 1px solid rgba(45,122,79,0.4);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      font-size: 13px; color: var(--text-dim);
+      cursor: pointer; font-family: inherit;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Install banner (shown before install) -->
+  <div id="install-banner">
+    <span>📲 Instale o app no seu celular</span>
+    <button id="banner-install-btn">Instalar</button>
+    <button class="close-banner" id="banner-close">×</button>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-logo">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <h1>BioCongresso</h1>
+        <span>2026</span>
+      </div>
+    </div>
+    <div class="header-date">
+      <strong>15–18 Set</strong>
+      São Paulo, SP
+    </div>
+  </header>
+
+  <!-- Screens -->
+  <main>
+
+    <!-- ── HOME ── -->
+    <section class="screen active" id="screen-home">
+
+      <div class="hero">
+        <p class="hero-eyebrow">Congresso de Biologia 2026</p>
+        <h2>Fronteiras da <em>Vida</em></h2>
+        <p class="hero-sub">Quatro dias de ciência, conexão e descoberta. Mais de 80 pesquisadores e 200 trabalhos apresentados.</p>
+        <div class="hero-badges">
+          <span class="badge">🔬 Genômica</span>
+          <span class="badge">🌱 Ecologia</span>
+          <span class="badge">🧠 Neurobiologia</span>
+          <span class="badge">🦠 Microbiologia</span>
+        </div>
+      </div>
+
+      <p class="section-title">Conta regressiva</p>
+      <div class="countdown-bar">
+        <div class="countdown-item"><span class="countdown-num" id="cd-dias">97</span><span class="countdown-label">dias</span></div>
+        <div class="countdown-item"><span class="countdown-num" id="cd-hrs">14</span><span class="countdown-label">horas</span></div>
+        <div class="countdown-item"><span class="countdown-num" id="cd-min">32</span><span class="countdown-label">min</span></div>
+        <div class="countdown-item"><span class="countdown-num" id="cd-sec">08</span><span class="countdown-label">seg</span></div>
+      </div>
+
+      <p class="section-title">Acesso rápido</p>
+      <div class="cards-row">
+        <div class="card-quick" onclick="goTo('programacao')">
+          <div class="card-icon">📅</div>
+          <div class="card-title">Programação</div>
+          <div class="card-sub">Ver grade completa</div>
+        </div>
+        <div class="card-quick" onclick="goTo('palestrantes')">
+          <div class="card-icon">🎤</div>
+          <div class="card-title">Palestrantes</div>
+          <div class="card-sub">Conheça os nomes</div>
+        </div>
+        <div class="card-quick" onclick="goTo('mapa')">
+          <div class="card-icon">📍</div>
+          <div class="card-title">Local</div>
+          <div class="card-sub">Mapa e salas</div>
+        </div>
+        <div class="card-quick" onclick="goTo('info')">
+          <div class="card-icon">ℹ️</div>
+          <div class="card-title">Informações</div>
+          <div class="card-sub">Inscrição e mais</div>
+        </div>
+      </div>
+
+      <p class="section-title">Destaque do dia</p>
+      <div class="featured-talk">
+        <p class="ft-label">Conferência de abertura</p>
+        <p class="ft-title">CRISPR na medicina: onde estamos em 2026</p>
+        <p class="ft-speaker">Dra. Fernanda Correa — USP / Instituto Butantan</p>
+        <div class="ft-time">
+          <span>🕗 08:30</span>
+          <span style="color:var(--text-dim)">·</span>
+          <span>Auditório Principal</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PROGRAMAÇÃO ── -->
+    <section class="screen" id="screen-programacao">
+
+      <p class="section-title">Programação</p>
+      <div class="prog-day-tabs">
+        <button class="day-tab active" onclick="setDay(this, 'dia1')">Seg 15</button>
+        <button class="day-tab" onclick="setDay(this, 'dia2')">Ter 16</button>
+        <button class="day-tab" onclick="setDay(this, 'dia3')">Qua 17</button>
+        <button class="day-tab" onclick="setDay(this, 'dia4')">Qui 18</button>
+      </div>
+
+      <div class="schedule-list" id="dia1">
+        <div class="schedule-item">
+          <div class="schedule-time">08:00<br>08:30</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Credenciamento</p>
+            <p class="schedule-speaker">Recepção dos participantes</p>
+            <span class="schedule-room">Hall de entrada</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">08:30<br>10:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">CRISPR na medicina: onde estamos em 2026</p>
+            <p class="schedule-speaker">Dra. Fernanda Correa — USP</p>
+            <span class="schedule-room">Aud. Principal</span>
+            <span class="schedule-tag">Plenária</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">10:00<br>10:30</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Coffee Break</p>
+            <span class="schedule-room">Foyer</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">10:30<br>12:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Simpósio: Biodiversidade da Mata Atlântica</p>
+            <p class="schedule-speaker">Dr. Rafael Menezes — INPA</p>
+            <span class="schedule-room">Sala A</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">10:30<br>12:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Workshop: Bioinformática aplicada</p>
+            <p class="schedule-speaker">Profa. Camila Teixeira — UNICAMP</p>
+            <span class="schedule-room">Lab. Computação</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">12:00<br>14:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Almoço</p>
+            <span class="schedule-room">Restaurante</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">14:00<br>16:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Sessão de comunicações orais – Ecologia</p>
+            <span class="schedule-room">Sala B</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">16:00<br>18:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Pôsteres – Seção I</p>
+            <span class="schedule-room">Aud. Principal</span>
+            <span class="schedule-tag">Interativo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-list" id="dia2" style="display:none">
+        <div class="schedule-item">
+          <div class="schedule-time">09:00<br>10:30</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Neurobiologia do comportamento animal</p>
+            <p class="schedule-speaker">Prof. Marcelo Dias — UFMG</p>
+            <span class="schedule-room">Aud. Principal</span>
+            <span class="schedule-tag">Plenária</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">10:30<br>12:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Mesa redonda: Publicação científica em biologia</p>
+            <span class="schedule-room">Sala A</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">14:00<br>16:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Minicurso: Microscopia confocal</p>
+            <p class="schedule-speaker">Dra. Larissa Fontes — FIOCRUZ</p>
+            <span class="schedule-room">Lab. Microscopia</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-list" id="dia3" style="display:none">
+        <div class="schedule-item">
+          <div class="schedule-time">09:00<br>10:30</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Mudanças climáticas e biodiversidade</p>
+            <p class="schedule-speaker">Dra. Ana Lima — INPE</p>
+            <span class="schedule-room">Aud. Principal</span>
+            <span class="schedule-tag">Plenária</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">14:00<br>18:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Visita técnica — Instituto de Biociências USP</p>
+            <span class="schedule-room">Transporte incluso</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-list" id="dia4" style="display:none">
+        <div class="schedule-item">
+          <div class="schedule-time">09:00<br>10:30</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Sessão de encerramento e premiação</p>
+            <span class="schedule-room">Aud. Principal</span>
+            <span class="schedule-tag">Plenária</span>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">11:00<br>12:00</div>
+          <div class="schedule-content">
+            <p class="schedule-name">Cerimônia de encerramento</p>
+            <span class="schedule-room">Aud. Principal</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── PALESTRANTES ── -->
+    <section class="screen" id="screen-palestrantes">
+      <p class="section-title">Palestrantes confirmados</p>
+      <div class="speakers-grid">
+        <div class="speaker-card">
+          <div class="speaker-avatar">👩‍🔬</div>
+          <p class="speaker-name">Dra. Fernanda Correa</p>
+          <p class="speaker-inst">USP / Butantan</p>
+          <p class="speaker-topic">CRISPR e terapia gênica</p>
+        </div>
+        <div class="speaker-card">
+          <div class="speaker-avatar">👨‍🔬</div>
+          <p class="speaker-name">Dr. Rafael Menezes</p>
+          <p class="speaker-inst">INPA</p>
+          <p class="speaker-topic">Biodiversidade Amazônica</p>
+        </div>
+        <div class="speaker-card">
+          <div class="speaker-avatar">👩‍💻</div>
+          <p class="speaker-name">Profa. Camila Teixeira</p>
+          <p class="speaker-inst">UNICAMP</p>
+          <p class="speaker-topic">Bioinformática e genômica</p>
+        </div>
+        <div class="speaker-card">
+          <div class="speaker-avatar">🧑‍🏫</div>
+          <p class="speaker-name">Prof. Marcelo Dias</p>
+          <p class="speaker-inst">UFMG</p>
+          <p class="speaker-topic">Neurobiologia animal</p>
+        </div>
+        <div class="speaker-card">
+          <div class="speaker-avatar">👩‍🔬</div>
+          <p class="speaker-name">Dra. Ana Lima</p>
+          <p class="speaker-inst">INPE</p>
+          <p class="speaker-topic">Clima e biodiversidade</p>
+        </div>
+        <div class="speaker-card">
+          <div class="speaker-avatar">🔬</div>
+          <p class="speaker-name">Dra. Larissa Fontes</p>
+          <p class="speaker-inst">FIOCRUZ</p>
+          <p class="speaker-topic">Microscopia avançada</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MAPA ── -->
+    <section class="screen" id="screen-mapa">
+      <p class="section-title">Local do evento</p>
+      <div class="map-card">
+        <div class="map-visual">
+          <div class="map-grid"></div>
+          <div class="map-pin">
+            <div class="map-pin-dot"></div>
+            <div class="map-pin-label">Centro de Convenções</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div>
+            <p class="map-address">Centro de Convenções Rebouças</p>
+            <p class="map-city">Av. Dr. Enéas de Carvalho Aguiar, 23 — SP</p>
+          </div>
+          <button class="map-btn" onclick="window.open('https://maps.google.com/?q=Centro+de+Convencoes+Reboucas+Sao+Paulo')">Abrir mapa</button>
+        </div>
+      </div>
+
+      <p class="section-title">Salas e espaços</p>
+      <div class="rooms-list">
+        <div class="room-item">
+          <div class="room-icon">🏛️</div>
+          <div>
+            <p class="room-name">Auditório Principal</p>
+            <p class="room-cap">Capacidade: 800 pessoas — Plenárias e pôsteres</p>
+          </div>
+        </div>
+        <div class="room-item">
+          <div class="room-icon">🪑</div>
+          <div>
+            <p class="room-name">Sala A</p>
+            <p class="room-cap">Capacidade: 150 pessoas — Simpósios</p>
+          </div>
+        </div>
+        <div class="room-item">
+          <div class="room-icon">🪑</div>
+          <div>
+            <p class="room-name">Sala B</p>
+            <p class="room-cap">Capacidade: 150 pessoas — Comunicações orais</p>
+          </div>
+        </div>
+        <div class="room-item">
+          <div class="room-icon">💻</div>
+          <div>
+            <p class="room-name">Laboratório de Computação</p>
+            <p class="room-cap">Capacidade: 40 pessoas — Workshops</p>
+          </div>
+        </div>
+        <div class="room-item">
+          <div class="room-icon">🔭</div>
+          <div>
+            <p class="room-name">Lab. de Microscopia</p>
+            <p class="room-cap">Capacidade: 20 pessoas — Minicursos práticos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INFORMAÇÕES ── -->
+    <section class="screen" id="screen-info">
+      <p class="section-title">Informações gerais</p>
+      <div class="info-section">
+
+        <div class="info-card">
+          <p class="info-card-title"><span>📝</span> Inscrições</p>
+          <ul class="info-list">
+            <li>Inscrições abertas até <strong>30 de agosto de 2026</strong></li>
+            <li>Estudantes de graduação: R$ 120,00</li>
+            <li>Pós-graduandos: R$ 200,00</li>
+            <li>Profissionais: R$ 350,00</li>
+            <li>Submissão de trabalhos: até 15 de julho</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <p class="info-card-title"><span>🏨</span> Hospedagem</p>
+          <p>Parcerias com hotéis próximos ao Centro de Convenções com tarifas especiais para participantes. Use o código <strong>BIO2026</strong> ao reservar.</p>
+        </div>
+
+        <div class="info-card">
+          <p class="info-card-title"><span>🍽️</span> Alimentação</p>
+          <ul class="info-list">
+            <li>Coffee breaks inclusos na inscrição</li>
+            <li>Almoço disponível no restaurante do centro (não incluso)</li>
+            <li>Opções vegetarianas e veganas disponíveis</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <p class="info-card-title"><span>📜</span> Certificados</p>
+          <p>Certificados digitais emitidos via e-mail em até 10 dias após o evento. Participação mínima de 75% da carga horária exigida.</p>
+        </div>
+
+        <div class="info-card">
+          <p class="info-card-title"><span>📬</span> Contato</p>
+          <p>
+            E-mail: <a href="mailto:contato@biocongresso2026.com.br">contato@biocongresso2026.com.br</a><br>
+            Instagram: <a href="#">@biocongresso2026</a>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom nav -->
+  <nav>
+    <button class="nav-btn active" id="nav-home" onclick="goTo('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Início</span>
+    </button>
+    <button class="nav-btn" id="nav-programacao" onclick="goTo('programacao')">
+      <span class="nav-icon">📅</span>
+      <span class="nav-label">Programa</span>
+    </button>
+    <button class="nav-btn" id="nav-palestrantes" onclick="goTo('palestrantes')">
+      <span class="nav-icon">🎤</span>
+      <span class="nav-label">Palestrantes</span>
+    </button>
+    <button class="nav-btn" id="nav-mapa" onclick="goTo('mapa')">
+      <span class="nav-icon">📍</span>
+      <span class="nav-label">Local</span>
+    </button>
+    <button class="nav-btn" id="nav-info" onclick="goTo('info')">
+      <span class="nav-icon">ℹ️</span>
+      <span class="nav-label">Info</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- Install modal -->
+<div id="install-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3>Instalar o app</h3>
+    <p>Adicione o BioCongresso à sua tela inicial para acesso rápido, mesmo sem internet.</p>
+    <ul class="install-steps">
+      <li><span class="step-num">1</span> No iPhone: toque em <strong>Compartilhar</strong> (□↑) e depois "Adicionar à Tela de Início"</li>
+      <li><span class="step-num">2</span> No Android: toque no menu ⋮ e "Adicionar à tela inicial" ou use o botão abaixo</li>
+    </ul>
+    <div class="modal-btns">
+      <button class="btn-primary" id="modal-install-btn">Instalar agora</button>
+      <button class="btn-secondary" id="modal-close">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Navigation ─────────────────────────────────
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    document.getElementById('nav-' + id).classList.add('active');
+    document.querySelector('main').scrollTo(0, 0);
+  }
+
+  // ── Schedule day tabs ──────────────────────────
+  function setDay(tab, dayId) {
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    ['dia1','dia2','dia3','dia4'].forEach(id => {
+      document.getElementById(id).style.display = id === dayId ? 'block' : 'none';
+    });
+  }
+
+  // ── Countdown ──────────────────────────────────
+  function updateCountdown() {
+    const target = new Date('2026-09-15T08:00:00-03:00');
+    const now = new Date();
+    const diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-dias').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-hrs').textContent  = String(h).padStart(2,'0');
+    document.getElementById('cd-min').textContent  = String(m).padStart(2,'0');
+    document.getElementById('cd-sec').textContent  = String(s).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ── PWA Install ────────────────────────────────
+  let deferredPrompt = null;
+  const banner = document.getElementById('install-banner');
+  const modal  = document.getElementById('install-modal');
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.classList.add('visible');
+  });
+
+  async function triggerInstall() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      banner.classList.remove('visible');
+      modal.classList.remove('open');
+    }
+  }
+
+  document.getElementById('banner-install-btn').onclick = () => {
+    if (deferredPrompt) triggerInstall();
+    else { banner.classList.remove('visible'); modal.classList.add('open'); }
+  };
+  document.getElementById('banner-close').onclick = () => banner.classList.remove('visible');
+  document.getElementById('modal-install-btn').onclick = triggerInstall;
+  document.getElementById('modal-close').onclick = () => modal.classList.remove('open');
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  window.addEventListener('appinstalled', () => {
+    banner.classList.remove('visible');
+    deferredPrompt = null;
+  });
+
+  // Show install option for iOS users who can't get beforeinstallprompt
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  if (isIOS && !isStandalone) {
+    setTimeout(() => { banner.classList.add('visible'); }, 3000);
+  }
+
+  // ── Service Worker ─────────────────────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
